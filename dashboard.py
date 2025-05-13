@@ -1,6 +1,4 @@
 import streamlit as st
-nltk.download('punkt', quiet=True)
-nltk.download('stopwords', quiet=True)
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -9,6 +7,8 @@ import re
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import nltk
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from collections import Counter
