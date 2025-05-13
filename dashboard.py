@@ -1,24 +1,31 @@
 import streamlit as st
 import pandas as pd
+import nltk
+import streamlit as st
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from collections import Counter
+
+def ensure_nltk_data():
+    """Ensure required NLTK data is downloaded."""
+    try:
+        nltk.data.find('tokenizers/punkt')
+        nltk.data.find('tokenizers/punkt_tab')
+        nltk.data.find('corpora/stopwords')
+    except LookupError:
+        st.warning("Downloading missing NLTK data...")
+        nltk.download('punkt', quiet=True)
+        nltk.download('punkt_tab', quiet=True)
+        nltk.download('stopwords', quiet=True)
+
+ensure_nltk_data()
+
 import plotly.express as px
 import plotly.graph_objects as go
 import os
 import re
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-import nltk
-
-# Improved NLTK download handling with try-except blocks
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt', quiet=True)
-
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    nltk.download('stopwords', quiet=True)
-
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from collections import Counter
