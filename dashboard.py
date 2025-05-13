@@ -1,4 +1,6 @@
 import streamlit as st
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -404,13 +406,6 @@ def load_data():
 @st.cache_data
 def extract_keywords(text_series, n_keywords=30):
     """Extract keywords from a series of text comments"""
-    try:
-        nltk.data.find('tokenizers/punkt')
-        nltk.data.find('corpora/stopwords')
-    except LookupError:
-        st.warning("NLTK resources missing. Downloading...")
-        nltk.download('punkt')
-        nltk.download('stopwords')
     
     all_text = " ".join(text_series.tolist())
     stop_words = set(stopwords.words('english'))
@@ -426,13 +421,6 @@ def extract_keywords(text_series, n_keywords=30):
 @st.cache_data
 def extract_bigrams(text_series, n_bigrams=30):
     """Extract bigrams from a series of text comments"""
-    try:
-        nltk.data.find('tokenizers/punkt')
-        nltk.data.find('corpora/stopwords')
-    except LookupError:
-        st.warning("NLTK resources missing. Downloading...")
-        nltk.download('punkt')
-        nltk.download('stopwords')
     
     all_text = " ".join(text_series.tolist())
     stop_words = set(stopwords.words('english'))
