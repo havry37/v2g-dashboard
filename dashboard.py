@@ -7,8 +7,18 @@ import re
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import nltk
-nltk.download('punkt', quiet=True)
-nltk.download('stopwords', quiet=True)
+
+# Improved NLTK download handling with try-except blocks
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt', quiet=True)
+
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords', quiet=True)
+
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from collections import Counter
