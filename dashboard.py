@@ -594,7 +594,7 @@ def main():
     
     page = st.sidebar.radio(
         "Select page",
-        ["🔍 Overview", "📊 Topic Analysis", "🔎 Comment Explorer", "⭐ Favorites"],
+        ["🔍 Overview", "📊 Topic Analysis", "🔎 Comment Explorer", "⭐ Favourites"],
         format_func=lambda x: x.split(' ', 1)[1] if ' ' in x else x
     )
     
@@ -1036,7 +1036,7 @@ def main():
                     star_icon = "⭐" if is_favorite else "☆"
                     
                     # Place the star button next to the comment box
-                    if st.button(star_icon, key=f"star_{comment_idx}", help="Add to favorites"):
+                    if st.button(star_icon, key=f"star_{comment_idx}", help="Add to favourites"):
                         if is_favorite:
                             st.session_state['favorite_comments'].remove(comment_idx)
                         else:
@@ -1044,12 +1044,12 @@ def main():
                         st.rerun()
                         
     # ⭐ Favorites page
-    elif page == "⭐ Favorites":
-                            st.header("Favorite Comments")
+    elif page == "⭐ Favourites":
+                            st.header("Favourite Comments")
                     
                             # If no favorites yet
                             if not st.session_state['favorite_comments']:
-                                st.info("You haven't saved any favorite comments yet. Star comments in the Comment Explorer to add them here.")
+                                st.info("You haven't saved any favourite comments yet. Star comments in the Comment Explorer to add them here.")
                                 return
                     
                             # Gather your favorites
