@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import nltk
-import streamlit as st
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from collections import Counter
@@ -540,6 +539,9 @@ def main():
     if df_comments is None or sentiment_summary is None:
         st.error("Failed to load data. Please check your file paths.")
         return
+        
+    if 'favorite_comments' not in st.session_state:
+        st.session_state['favorite_comments'] = set()
     
     # Index comments only if necessary
     with st.spinner("Indexing comments..."):
@@ -590,7 +592,7 @@ def main():
     
     page = st.sidebar.radio(
         "Select page",
-        ["🔍 Overview", "📊 Topic Analysis", "🔎 Comment Explorer"],
+        ["🔍 Overview", "📊 Topic Analysis", "🔎 Comment Explorer", "⭐ Favorites"],
         format_func=lambda x: x.split(' ', 1)[1] if ' ' in x else x
     )
     
@@ -999,28 +1001,98 @@ def main():
             start_idx = (current_page - 1) * comments_per_page
             end_idx   = min(start_idx + comments_per_page, len(filtered_comments))
 
-            for i, (_, row) in enumerate(
+            for i, (comment_idx, row) in enumerate(
                     filtered_comments.iloc[start_idx:end_idx].iterrows(),
                     start=start_idx + 1
                 ):
                 # highlight if we have a search term
                 full_text = highlight_keywords(str(row['Comment']), search_term) if search_term else str(row['Comment'])
                 badge = format_sentiment_badge(row['Sentiment'])
-
-                st.markdown(f"""
-                <div class='comment-box'>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-                        <div>
-                            <strong>Comment {i}</strong>
-                            &nbsp;|&nbsp;
-                            <span style="color:#6B7280;">{row['Topic_Label']}</span>
+            
+                
+                # Create the star button with current favorite state
+                col1, col2 = st.columns([0.95, 0.05])
+                
+                with col1:
+                    st.markdown(f"""
+                    <div class='comment-box'>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                            <div>
+                                <strong>Comment {i}</strong>
+                                &nbsp;|&nbsp;
+                                <span style="color:#6B7280;">{row['Topic_Label']}</span>
+                            </div>
+                            {badge}
                         </div>
-                        {badge}
+                        <div>{full_text}</div>
                     </div>
-                    <div>{full_text}</div>
-                </div>
-                """, unsafe_allow_html=True)
-
+                    """, unsafe_allow_html=True)
+                
+                with col2:
+                    # Check if this comment is already a favorite
+                    is_favorite = comment_idx in st.session_state.get('favorite_comments', set())
+                    star_icon = "⭐" if is_favorite else "☆"
+                    
+                    # Place the star button next to the comment box
+                    if st.button(star_icon, key=f"star_{comment_idx}", help="Add to favorites"):
+                        if is_favorite:
+                            st.session_state['favorite_comments'].remove(comment_idx)
+                        else:
+                            st.session_state['favorite_comments'].add(comment_idx)
+                        st.rerun()
+                        
+    # ⭐ Favorites page
+    elif page == "⭐ Favorites":
+                            st.header("Favorite Comments")
+                    
+                            # If no favorites yet
+                            if not st.session_state['favorite_comments']:
+                                st.info("You haven't saved any favorite comments yet. Star comments in the Comment Explorer to add them here.")
+                                return
+                    
+                            # Gather your favorites
+                            favorite_indices = list(st.session_state['favorite_comments'])
+                            favorited_comments = df_comments.loc[favorite_indices]
+                    
+                            st.markdown(f"### You have {len(favorited_comments)} favorite comments")
+                    
+                            # Pagination state
+                            if 'favorites_page' not in st.session_state:
+                                st.session_state['favorites_page'] = 1
+                    
+                            comments_per_page = 5
+                            current_page = custom_pagination(
+                                len(favorited_comments),
+                                comments_per_page,
+                                st.session_state['favorites_page'],
+                                "favorites"
+                            )
+                    
+                            start_idx = (current_page - 1) * comments_per_page
+                            end_idx = start_idx + comments_per_page
+                    
+                            # Display each favorited comment
+                            for display_i, (idx, row) in enumerate(
+                                    favorited_comments.iloc[start_idx:end_idx].iterrows(),
+                                    start=start_idx + 1
+                                ):
+                                badge = format_sentiment_badge(row['Sentiment'])
+                                st.markdown(f"""
+                                    <div class='comment-box'>
+                                      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                                        <div>
+                                          <strong>Comment {idx}</strong> | 
+                                          <span style="color:#6B7280;">{row['Topic_Label']}</span>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:0.5rem;">{badge}</div>
+                                      </div>
+                                      <div>{row['Comment']}</div>
+                                    </div>
+                                """, unsafe_allow_html=True)
+                                # “Unfavorite” button
+                                if st.button("★ Remove", key=f"unfav_{idx}"):
+                                    st.session_state['favorite_comments'].remove(idx)
+                                    st.rerun()
 
 st.markdown("<div style='margin-top: 3rem;'></div>", unsafe_allow_html=True)
 
