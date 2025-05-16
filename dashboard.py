@@ -1056,7 +1056,7 @@ def main():
                             favorite_indices = list(st.session_state['favorite_comments'])
                             favorited_comments = df_comments.loc[favorite_indices]
                     
-                            st.markdown(f"### You have {len(favorited_comments)} favorite comments")
+                            st.markdown(f"### You have {len(favorited_comments)} favourite comments")
                     
                             # Pagination state
                             if 'favorites_page' not in st.session_state:
