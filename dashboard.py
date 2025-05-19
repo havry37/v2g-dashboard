@@ -738,9 +738,10 @@ def main():
         fig_topics.update_traces(textposition='outside')
         fig_topics.update_layout(
             xaxis_tickangle=-45,
+            height=500,
             xaxis_title="Topic",
             yaxis_title="Number of Comments",
-            margin=dict(t=150, b=100),
+            margin=dict(t=80, b=100),
             plot_bgcolor='rgba(0,0,0,0)'
         )
         
