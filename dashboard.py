@@ -728,6 +728,37 @@ def main():
             icon = EMOJI.get(title, "•")  # fallback bullet if no emoji
             with target_col.expander(f"{icon}  {title}"):
                 st.markdown(desc.strip())
+                
+        st.subheader("Topic Size Distribution")
+        # 1️⃣ Compute counts
+        topic_counts = (
+            df_comments['Topic_Label']
+            .value_counts()
+            .reset_index()
+            .rename(columns={'index': 'Topic', 'Topic_Label': 'Count'})
+        )
+        
+        # 2️⃣ Build bar chart
+        fig_topics = px.bar(
+            topic_counts,
+            x='Topic',
+            y='Count',
+            text='Count',
+            color='Count',
+            color_continuous_scale='Viridis',
+        )
+        
+        fig_topics.update_traces(textposition='outside')
+        fig_topics.update_layout(
+            xaxis_tickangle=-45,
+            xaxis_title="Topic",
+            yaxis_title="Number of Comments",
+            margin=dict(t=30, b=100),            # give room for rotated labels
+            plot_bgcolor='rgba(0,0,0,0)'
+        )
+        
+        # 3️⃣ Display it
+        st.plotly_chart(fig_topics, use_container_width=True)
     
     # Topic Analysis page
     elif page == "📊 Topic Analysis":
