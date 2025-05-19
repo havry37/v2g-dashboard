@@ -740,7 +740,7 @@ def main():
             xaxis_tickangle=-45,
             xaxis_title="Topic",
             yaxis_title="Number of Comments",
-            margin=dict(t=30, b=100),
+            margin=dict(t=80, b=100),
             plot_bgcolor='rgba(0,0,0,0)'
         )
         
