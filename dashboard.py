@@ -726,15 +726,16 @@ def main():
               .reset_index(name='Count') # turn it into DF with columns [Topic, Count]
         )
         
-        # (2) Now Plotly will see exactly those two columns:
         fig_topics = px.bar(
-            topic_counts,
-            x='Topic',
-            y='Count',
-            text='Count',
-            color='Count',
-            color_continuous_scale='Viridis',
-        )
+        topic_counts,
+        x='Topic',
+        y='Count',
+        text='Count',
+        color='Count',
+        color_continuous_scale='Viridis',
+        category_orders={'Topic': topic_counts['Topic'].tolist()},
+        range_y=[0, 2500]           # ← force y-axis from 0 to 2500
+    )
         fig_topics.update_traces(textposition='outside')
         fig_topics.update_layout(
             xaxis_tickangle=-45,
