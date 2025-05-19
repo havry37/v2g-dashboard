@@ -8,7 +8,6 @@ from nltk.corpus import stopwords
 from collections import Counter
 
 def ensure_nltk_data():
-    """Ensure required NLTK data is downloaded."""
     try:
         nltk.data.find('tokenizers/punkt')
         nltk.data.find('tokenizers/punkt_tab')
@@ -594,7 +593,7 @@ def main():
     
     page = st.sidebar.radio(
         "Select page",
-        ["🔍 Overview", "📊 Topic Analysis", "🔎 Comment Explorer", "⭐ Favourites"],
+        ["🔍 Overview", "📊 Topic Analysis", "🔎 Comment Explorer", "⭐ Favourites", "📖 About"],
         format_func=lambda x: x.split(' ', 1)[1] if ' ' in x else x
     )
     
@@ -1095,6 +1094,70 @@ def main():
                                 if st.button("★ Remove", key=f"unfav_{idx}"):
                                     st.session_state['favorite_comments'].remove(idx)
                                     st.rerun()
+
+    # --- About page ---
+    elif page == "📖 About":
+        st.header("About This Study")
+    
+        # 1. Introduction
+        st.subheader("Introduction")
+        st.markdown("""
+        This dashboard explores public perceptions of bi-directional charging—primarily vehicle-to-grid (V2G), 
+        but also vehicle-to-home (V2H) and vehicle-to-load (V2L). Using topic modelling and sentiment analysis 
+        on Reddit comments, we uncover key concerns and preferences around these technologies to inform 
+        ePowerMove stakeholders.  
+    
+        For full project details, click the **ePowerMove** link in the top-right corner of this app.
+        """)
+    
+        # 2. Methodology Overview
+        st.subheader("2. Methodology Overview")
+        st.markdown("""
+        The methodology for this study comprises **data extraction** and **text analysis** phases.
+        Reddit was chosen as the primary data source due to its rich ecosystem of user-generated
+        content and community-driven discussions, organised into topic-specific subreddits where users
+        self-select into interest-based communities. Only English-language texts were included to ensure consistency.
+        """)
+    
+        st.markdown("### 2.1 Subreddit Selection")
+        st.markdown("""
+        - We used **PRAW** (v7.7.1) to interface with the Reddit API, authenticating with a client ID,
+          secret, and user agent as per Reddit’s guidelines.
+        - An extensive search query of 24 keywords (e.g. “bidirectional charging”, “V2G”, “vehicle-to-home”)
+          was applied across 33 EV- and energy-focused subreddits (r/electricvehicles, r/teslamotors, r/solar, etc.).
+        - No timeframe restriction was applied, capturing discussions up to **March 12, 2025**.
+        """)
+    
+        st.markdown("### 2.2 Data Extraction")
+        st.markdown("""
+        - For each subreddit, posts matching our query were retrieved using **new**, **hot**, and **top** sorts.
+        - Saved attributes: subreddit name, post ID, title, score, URL, comment count, timestamp, and text.
+        - Removed duplicates by post ID → **780 unique posts**, then extracted all their comments.
+        - After deduplication by comment ID → **17,430 unique comments**.
+        """)
+    
+        st.markdown("### 2.3 Preprocessing")
+        st.markdown("""
+        - Removed null/empty/deleted comments, and filtered out posts with <5 words or generic “thanks” messages.
+        - Stripped boilerplate (bot signatures, URLs, emojis, markdown, quotes) with ~23 regex patterns.
+        - Final cleanup and de-duplication yielded **11,454 high-quality comments**.
+        """)
+    
+        st.markdown("### 2.4 Topic Modelling")
+        st.markdown("""
+        - Utilised **BERTopic** with OpenAI’s `text-embedding-3-large` for transformer embeddings.
+        - Dimensionality reduction via **UMAP** (_n_components_=10, _n_neighbors_=13, _min_dist_=0.0).
+        - Clustering with **K-means** (50 clusters after experimentation).
+        - Keywords selected via **Maximal Marginal Relevance** (diversity=0.5), then labelled with GPT-4o-mini.
+        - Hierarchical modelling consolidated similar topics for clarity.
+        """)
+    
+        st.markdown("### 2.5 Sentiment Analysis")
+        st.markdown("""
+        - Built a **gold standard** by manually annotating 600 stratified comments (200 per class).
+        - Benchmarked four premium and four budget LLMs zero-shot; selected the best for full-dataset inference.
+        - Prompts followed best-practice engineering guidelines, instructing the model as a “sentiment analysis expert.”
+        """)
 
 st.markdown("<div style='margin-top: 3rem;'></div>", unsafe_allow_html=True)
 
