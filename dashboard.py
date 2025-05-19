@@ -719,17 +719,14 @@ def main():
             st.plotly_chart(fig, use_container_width=True)
 
     # ── Topic Size Distribution ──
-        st.subheader("Topic Size Distribution")
-    
-        # Count number of comments per topic
         topic_counts = (
             df_comments['Topic_Label']
-            .value_counts()
-            .reset_index()
-            .rename(columns={'index': 'Topic', 'Topic_Label': 'Count'})
+              .value_counts()            # Series: index=topic_label, values=counts
+              .rename_axis('Topic')      # name the index “Topic”
+              .reset_index(name='Count') # turn it into DF with columns [Topic, Count]
         )
-    
-        # Build the bar chart
+        
+        # (2) Now Plotly will see exactly those two columns:
         fig_topics = px.bar(
             topic_counts,
             x='Topic',
@@ -746,11 +743,10 @@ def main():
             margin=dict(t=30, b=100),
             plot_bgcolor='rgba(0,0,0,0)'
         )
-    
-        # Render it
+        
+        st.subheader("Topic Size Distribution")
         st.plotly_chart(fig_topics, use_container_width=True)
-        
-        
+
         st.subheader("Topic Descriptions")
 
         col_left, col_right = st.columns(2)
