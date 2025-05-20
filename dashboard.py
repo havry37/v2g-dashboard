@@ -1178,10 +1178,10 @@ def main():
         st.markdown("### 2.4 Topic Modelling")
         st.markdown("""
         - Utilised **Bidirectional Encoder Representations from Transformers (BERTopic)** with OpenAI’s `text-embedding-3-large` for transformer embeddings via OpenAI Application Programming Interface (API).
-        - Dimensionality reduction via **UMAP** (_n_components_=10, _n_neighbors_=13, _min_dist_=0.0, _metric='cosine', _random_state=42).
-        - Clustering with **K-means** (_n=50). This number was determined based on an iterative experiment where we tried various ranges, such as 25, 50, 75, and 100, with 50 yielding the best results.  
-        - Default English stopwords provided by the CountVectorizer with the following parameters: _stop_words="english", _min_df=10, _max_df=0.8, _ngram_range=(1, 2). 
-        - Keywords selected via **Maximal Marginal Relevance** (_diversity=0.5), then labelled with GPT-4o-mini.
+        - Dimensionality reduction via **UMAP** (_n_components_=10, _n_neighbors_=13, _min_dist_=0.0, _metric_='cosine', _random_state_=42).
+        - Clustering with **K-means** (_n_=_50). This number was determined based on an iterative experiment where we tried various ranges, such as 25, 50, 75, and 100, with 50 yielding the best results.  
+        - Default English stopwords provided by the CountVectorizer with the following parameters: _stop_words_="english", _min_df_=10, _max_df=0.8, _ngram_range_=(1, 2). 
+        - Keywords selected via **Maximal Marginal Relevance** (_diversity_=0.5), then labelled with GPT-4o-mini.
         - Hierarchical modelling consolidated similar topics for clarity.
         - We observed a **topic coherence score (CV) of 0.81** and a **topic diversity score of 0.53**, meaning that the topics are highly coherent, with words within each topic being strongly related, and moderately diverse, indicating a good balance between distinctiveness and overlap among topics.
         """)
@@ -1189,7 +1189,7 @@ def main():
         st.markdown("### 2.5 Sentiment Analysis")
         st.markdown("""
         - Built a **gold standard** by manually annotating 600 stratified comments (200 per class) through Valence Aware Dictionary and sEntiment Reasoner (VADER), which is a is a lexicon and rule-based sentiment analysis tool. 
-        - Benchmarked four premium (_Grok Beta, _Claude-3-Opus, _GPT-4o, _Gemini-1.5-Pro) and four budget LLMs (_GPT-4o-mini, _DeepSeek, _Gemini Flash, _Claude-3-Haiku) against the gold standard.
+        - Benchmarked four premium (_Grok_Beta, _Claude-3-Opus, _GPT-4o, _Gemini-1.5-Pro) and four budget LLMs (_GPT-4o-mini, _DeepSeek, _Gemini Flash, _Claude-3-Haiku) against the gold standard.
         - We follow a zero-shot prompting strategy, prompts followed best-practice engineering guidelines, instructing the model as a “sentiment analysis expert.”
         - The cost-efficient Gemini Flash achieved the highest accuracy at 82%, outperforming all other models. 
         """)
