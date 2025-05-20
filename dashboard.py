@@ -1154,9 +1154,10 @@ def main():
         st.markdown("""
         - We used **PRAW** (v7.7.1) to interface with the Reddit API, authenticating with a client ID,
           secret, and user agent as per Reddit’s guidelines.
-        - An extensive search query of 24 keywords (e.g. “bidirectional charging”, “V2G”, “vehicle-to-home”)
-          was applied across 33 EV- and energy-focused subreddits (r/electricvehicles, r/teslamotors, r/solar, etc.).
+        - An extensive search query of 24 keywords (e.g. “bidirectional charging”, “V2G”, “vehicle-to-home”, "car-to-grid")
+          was applied across 33 EV- and energy-focused subreddits (r/electricvehicles, r/teslamotors, r/energy, r/solar, etc.).
         - No timeframe restriction was applied, capturing discussions up to **March 12, 2025**.
+        - These subreddits were selected based on their active engagement with EV-related topics, ensuring a mix of general interest (e.g., r/technology) and specialised communities (e.g., r/evcharging, r/energy).
         """)
     
         st.markdown("### 2.2 Data Extraction")
@@ -1172,22 +1173,26 @@ def main():
         - Removed null/empty/deleted comments, and filtered out posts with <5 words or generic “thanks” messages.
         - Stripped boilerplate (bot signatures, URLs, emojis, markdown, quotes) with ~23 regex patterns.
         - Final cleanup and de-duplication yielded **11,454 high-quality comments**.
+        - After reviewing the dataset, we further deleted 90 irrelevant sentences, resulting in **11, 454 comments**
         """)
     
         st.markdown("### 2.4 Topic Modelling")
         st.markdown("""
-        - Utilised **BERTopic** with OpenAI’s `text-embedding-3-large` for transformer embeddings.
-        - Dimensionality reduction via **UMAP** (_n_components_=10, _n_neighbors_=13, _min_dist_=0.0).
-        - Clustering with **K-means** (50 clusters after experimentation).
+        - Utilised **Bidirectional Encoder Representations from Transformers (BERTopic)** with OpenAI’s `text-embedding-3-large` for transformer embeddings via OpenAI Application Programming Interface (API).
+        - Dimensionality reduction via **UMAP** (_n_components_=10, _n_neighbors_=13, _min_dist_=0.0, metric='cosine', random_state=42).
+        - Clustering with **K-means** (n=50). This number was determined based on an iterative experiment where we tried various ranges, such as 25, 50, 75, and 100, with 50 yielding the best results.  
+        - Default English stopwords provided by the CountVectorizer with the following parameters: stop_words="english", min_df=10, max_df=0.8, ngram_range= (1, 2). 
         - Keywords selected via **Maximal Marginal Relevance** (diversity=0.5), then labelled with GPT-4o-mini.
         - Hierarchical modelling consolidated similar topics for clarity.
+        - We observed a **topic coherence score (CV) of 0.81** and a **topic diversity score of 0.53**, meaning that the topics are highly coherent, with words within each topic being strongly related, and moderately diverse, indicating a good balance between distinctiveness and overlap among topics.
         """)
     
         st.markdown("### 2.5 Sentiment Analysis")
         st.markdown("""
-        - Built a **gold standard** by manually annotating 600 stratified comments (200 per class).
-        - Benchmarked four premium and four budget LLMs zero-shot; selected the best for full-dataset inference.
-        - Prompts followed best-practice engineering guidelines, instructing the model as a “sentiment analysis expert.”
+        - Built a **gold standard** by manually annotating 600 stratified comments (200 per class) through Valence Aware Dictionary and sEntiment Reasoner (VADER), which is a is a lexicon and rule-based sentiment analysis tool. 
+        - Benchmarked four premium (Grok Beta, Claude-3-Opus, GPT-4o, Gemini-1.5-Pro) and four budget LLMs (GPT-4o-mini, DeepSeek, Gemini Flash, Claude-3-Haiku) against the gold standard
+        - We follow a zero-shot prompting strategy, prompts followed best-practice engineering guidelines, instructing the model as a “sentiment analysis expert.”
+        - The cost-efficient Gemini Flash achieved the highest accuracy at 82%, outperforming all other models. 
         """)
 
 st.markdown("<div style='margin-top: 3rem;'></div>", unsafe_allow_html=True)
