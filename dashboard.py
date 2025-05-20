@@ -1131,7 +1131,7 @@ def main():
         st.header("About This Study")
     
         # 1. Introduction
-        st.subheader("Introduction")
+        st.subheader("1. Introduction")
         st.markdown("""
         This dashboard explores public perceptions of bi-directional charging—primarily vehicle-to-grid (V2G), 
         but also vehicle-to-home (V2H) and vehicle-to-load (V2L). Using topic modelling and sentiment analysis 
