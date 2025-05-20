@@ -1193,6 +1193,14 @@ def main():
         - We followed a zero-shot prompting strategy, prompts followed best-practice engineering guidelines, instructing the model as a “sentiment analysis expert.”
         - The cost-efficient **Gemini Flash achieved the highest accuracy at 82%**, outperforming all other models. 
         """)
+        
+        st.markdown("### 3. Limitations")
+        st.markdown("""
+        - Reddit’s demographic bias (tech-savvy, potentially non-representative). 
+        - Lack of longitudinal data to track sentiment changes over time. 
+        - Geographical bias (Reddit’s user base is predominantly U.S.-based).
+        - Reliance on a single platform, which may miss perspectives from other sources.
+        """)
 
 st.markdown("<div style='margin-top: 3rem;'></div>", unsafe_allow_html=True)
 
