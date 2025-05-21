@@ -125,7 +125,7 @@ each standard.
 """,
 
     "V2X Preferences and Trade-offs": """
-Users compare **V2L (vehicle-to-load), V2H, and V2G**: V2L’s plug-and-play convenience for
+Users compare different vehicle-to-everything (V2X) technologies—such as **V2L (vehicle-to-load), V2H, and V2G**: V2L’s plug-and-play convenience for
 appliances or camping, V2H’s whole-home backup during outages, and V2G’s
 potential grid revenue—balanced against cost, complexity, and battery wear.
 """,
