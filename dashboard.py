@@ -93,7 +93,7 @@ st.set_page_config(
 
 TOPIC_INFO = {
     "Energy Resilience and V2G/V2H Backup": """
-Electric vehicles can feed **homes** (V2H) or the **grid** (V2G),
+Electric vehicles can feed **homes** (vehicle-to-home [V2H] ) or the **grid** (vehicle-to-grid [V2G]),
 providing backup power and grid-stabilisation in addition to transport.
 Users compare this to stationary batteries (e.g. Powerwall) and gas
 generators, weighing cost, convenience, and reliability.
@@ -109,7 +109,7 @@ set price thresholds and battery-reserve limits.
     "Hardware and Wiring": """
 What it really takes to interface an EV with home circuits or the grid:
 transfer switches, inverters, breakers, distribution panels, and how cost
-and complexity differ between V2H, V2G, and V2L setups.
+and complexity differ between V2H, V2G, and V2L (vehicle-to-load) setups.
 """,
 
     "EV Bi-directional Market Landscape": """
@@ -125,13 +125,13 @@ each standard.
 """,
 
     "V2X Preferences and Trade-offs": """
-Users compare **V2L, V2H, and V2G**: V2L’s plug-and-play convenience for
+Users compare **V2L (vehicle-to-load), V2H, and V2G**: V2L’s plug-and-play convenience for
 appliances or camping, V2H’s whole-home backup during outages, and V2G’s
 potential grid revenue—balanced against cost, complexity, and battery wear.
 """,
 
     "Battery Longevity": """
-Explores how charge–discharge cycling, chemistry choice (e.g. LFP), and
+Explores how charge–discharge cycling, chemistry choice (e.g. lithium iron phosphate [LFP]), and
 emerging “million-mile” cells affect battery warranties and long-term
 capacity in bidirectional scenarios.
 """,
