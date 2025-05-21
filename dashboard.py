@@ -1188,7 +1188,7 @@ def main():
     
         st.markdown("### 2.5 Sentiment Analysis")
         st.markdown("""
-        - Built a **gold standard** by manually annotating 600 stratified comments (200 per class) through Valence Aware Dictionary and sEntiment Reasoner (VADER), which is a is a lexicon and rule-based sentiment analysis tool. 
+        - Built a **gold standard dataset** by first using the Valence Aware Dictionary and sEntiment Reasoner (VADER)—a lexicon and rule-based sentiment analysis tool—to extract 600 stratified comments (200 per class: negative, neutral, and positive), and then manually annotated each of these comments to ensure high-quality sentiment labels. 
         - Benchmarked four premium (Grok Beta, Claude-3-Opus, GPT-4o, Gemini-1.5-Pro) and four budget LLMs (GPT-4o-mini, DeepSeek, Gemini Flash, Claude-3-Haiku) against the gold standard.
         - We followed a zero-shot prompting strategy, prompts followed best-practice engineering guidelines, instructing the model as a “sentiment analysis expert.”
         - The cost-efficient **Gemini Flash achieved the highest accuracy at 82%**, outperforming all other models. 
