@@ -771,7 +771,9 @@ def main():
         </div>
         """, unsafe_allow_html=True)
         
-        topic_options = ["All"] + sorted(df_comments['Topic_Label'].unique().tolist())
+        topics_by_count = df_comments['Topic_Label'].value_counts().index.tolist()
+        topic_options = ["All"] + topics_by_count
+        
         selected_topic = st.selectbox(
             "Select Topic to Analyse", 
             options=topic_options,
@@ -964,6 +966,17 @@ def main():
         
             # ── special case: All topics ──
             if selected_topic == "All":
+                # ── expander explaining V2X keywords ──
+                with st.expander("ℹ️ What counts as a V2X mention?"):
+                    st.markdown("""
+                    This analysis only includes **explicit keyword matches** for V2H, V2G, or V2L—
+                    such as *"vehicle-to-grid"*, *"V2L"*, or *"V2H"*.
+                    
+                    Comments that **describe** bidirectional use cases (e.g. powering a home,
+                    selling energy to the grid) but **don’t use these terms directly**
+                    may not appear in this breakdown. Hence, interpret the results with caution.
+                    """, unsafe_allow_html=True)
+                
                 # aggregate counts across all topics
                 agg = (
                     breakdown_df
