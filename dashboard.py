@@ -770,14 +770,18 @@ def main():
         </div>
         """, unsafe_allow_html=True)
         
+        topic_options = ["All"] + sorted(df_comments['Topic_Label'].unique().tolist())
         selected_topic = st.selectbox(
             "Select Topic to Analyse", 
-            options=df_comments['Topic_Label'].unique(),
-            index=1
+            options=topic_options,
+            index=0
         )
         
-        topic_comments = df_comments[df_comments['Topic_Label'] == selected_topic]
-        
+        if selected_topic == "All":
+            topic_comments = df_comments
+        else:
+            topic_comments = df_comments[df_comments['Topic_Label'] == selected_topic]
+           
         col1, col2, col3 = st.columns(3)
         with col1:
             st.metric("Comments in Topic", len(topic_comments))
