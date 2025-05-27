@@ -959,12 +959,29 @@ def main():
                 key="v2x_sents"
             )
 
-            breakdown_df = analyze_v2x_mentions(topic_comments)  # scoped to current topic
+            breakdown_df = analyze_v2x_mentions(topic_comments)
+            
+            # if we're on "All Topics", build an aggregate "All" row
+            if selected_topic == "All":
+                # sum counts across every topic for each (Sentiment, Mode)
+                overall = (
+                    breakdown_df
+                    .groupby(['Sentiment','Mode'], as_index=False)
+                    .agg({'Count':'sum'})
+                )
+                total_comments = len(topic_comments)
+                overall['Percentage'] = overall['Count'] / total_comments * 100
+                overall['Topic'] = 'All'
+            
+                # prepend the "All" row before the per-topic rows
+                breakdown_df = pd.concat([overall, breakdown_df], ignore_index=True)
+            
+            # now filter by the user’s mode/sentiment picks
             filtered_df = breakdown_df[
                 breakdown_df["Mode"].isin(modes) &
                 breakdown_df["Sentiment"].isin(sents)
             ]
-
+            
             visualize_v2x_data(filtered_df)
 
     
