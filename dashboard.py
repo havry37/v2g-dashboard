@@ -225,6 +225,7 @@ def visualize_v2x_data(df):
 
     st.subheader("V2H/V2G/V2L Mention Rates by Topic & Sentiment")
     df_disp = df.copy()
+    df_disp = df_disp[['Topic', 'Sentiment', 'Mode', 'Count', 'Percentage']]
     df_disp['Percentage'] = df_disp['Percentage'].round(1).astype(str) + '%'
     st.dataframe(df_disp, use_container_width=True)
 
@@ -960,29 +961,54 @@ def main():
             )
 
             breakdown_df = analyze_v2x_mentions(topic_comments)
-            
-            # if we're on "All Topics", build an aggregate "All" row
+        
+            # ── special case: All topics ──
             if selected_topic == "All":
-                # sum counts across every topic for each (Sentiment, Mode)
-                overall = (
+                # aggregate counts across all topics
+                agg = (
                     breakdown_df
-                    .groupby(['Sentiment','Mode'], as_index=False)
+                    .groupby(['Mode','Sentiment'], as_index=False)
                     .agg({'Count':'sum'})
                 )
-                total_comments = len(topic_comments)
-                overall['Percentage'] = overall['Count'] / total_comments * 100
-                overall['Topic'] = 'All'
-            
-                # prepend the "All" row before the per-topic rows
-                breakdown_df = pd.concat([overall, breakdown_df], ignore_index=True)
-            
-            # now filter by the user’s mode/sentiment picks
-            filtered_df = breakdown_df[
-                breakdown_df["Mode"].isin(modes) &
-                breakdown_df["Sentiment"].isin(sents)
-            ]
-            
-            visualize_v2x_data(filtered_df)
+                total = len(topic_comments)
+                agg['Percentage'] = agg['Count'] / total * 100
+        
+                # reorder columns so Mode, Sentiment, Count, Percentage
+                agg = agg[['Mode','Sentiment','Count','Percentage']]
+                agg['Percentage'] = agg['Percentage'].round(1).astype(str) + '%'
+        
+                st.subheader("All Topics: V2X Mentions")
+                st.dataframe(agg, use_container_width=True)
+        
+                # single bar chart
+                capitalized_sentiment_colors = {
+                    'Positive': SENTIMENT_COLORS['positive'],
+                    'Neutral':  SENTIMENT_COLORS['neutral'],
+                    'Negative': SENTIMENT_COLORS['negative']
+                }
+                fig = px.bar(
+                    agg,
+                    x='Mode', y='Percentage', color='Sentiment',
+                    text=agg['Percentage'],
+                    color_discrete_map=capitalized_sentiment_colors,
+                    category_orders={'Mode': ['V2H','V2G','V2L'],
+                                     'Sentiment':['Positive','Neutral','Negative']}
+                )
+                fig.update_layout(
+                    xaxis_title="Mode",
+                    yaxis_title="% of comments",
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    margin=dict(t=30,b=30)
+                )
+                st.plotly_chart(fig, use_container_width=True)
+        
+            # ── otherwise, do your normal per‐topic breakdown ──
+            else:
+                filtered_df = breakdown_df[
+                    breakdown_df["Mode"].isin(modes) &
+                    breakdown_df["Sentiment"].isin(sents)
+                ]
+                visualize_v2x_data(filtered_df)
 
     
     # Comment Explorer page
