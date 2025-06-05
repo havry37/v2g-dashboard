@@ -442,7 +442,7 @@ def extract_bigrams(text_series, n_bigrams=30):
     
     all_text = " ".join(text_series.tolist())
     stop_words = set(stopwords.words('english'))
-    custom_stops = {'would', 'could', 'get', 'also', 'even', 'like', 'bidirectional charging', 'directional charging', 'electric vehicles', 'bidirectional charger', 'bidirectional chargers', 'one', 'make', 'just', 'v2g', 'ev', 'battery', 'power', 'grid', 'time', 'use', 'using', 'used', 'car', 'thing'}
+    custom_stops = {'would', 'could', 'get', 'also', 'even', 'like', 'bidirectional charging', 'directional charging', 'electric vehicles', 'charger', 'bidirectional', 'one', 'make', 'just', 'v2g', 'ev', 'battery', 'power', 'time', 'use', 'using', 'used', 'car', 'thing'}
     stop_words.update(custom_stops)
     
     words = word_tokenize(all_text.lower())
