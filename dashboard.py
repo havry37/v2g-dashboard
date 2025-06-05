@@ -924,7 +924,7 @@ def main():
                 bigrams = extract_bigrams(keyword_comments)
                 trigrams = extract_trigrams(keyword_comments)
                 
-                word_tab, bigram_tab, cloud_tab = st.tabs(["Top Keywords", "Top Bigrams", "Top Trigrams", "Word Cloud"])
+                word_tab, bigram_tab, trigram_tab, cloud_tab = st.tabs(["Top Keywords", "Top Bigrams", "Top Trigrams", "Word Cloud"])
                 
                 with word_tab:
                     st.subheader("Top Keywords")
