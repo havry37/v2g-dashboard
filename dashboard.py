@@ -953,7 +953,7 @@ def main():
                         y='Bigram',
                         orientation='h',
                         color='Count',
-                        color_continuous_scale='Plasma'
+                        color_continuous_scale='Viridis'
                     )
                     fig.update_layout(
                         yaxis={'categoryorder':'total ascending'},
@@ -971,7 +971,7 @@ def main():
                         y='Trigram',
                         orientation='h',
                         color='Count',
-                        color_continuous_scale='Plasma'
+                        color_continuous_scale='Viridis'
                     )
                     fig.update_layout(
                         yaxis={'categoryorder': 'total ascending'},
