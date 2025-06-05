@@ -6,6 +6,7 @@ import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from collections import Counter
+from nltk.util import ngrams
 
 def ensure_nltk_data():
     try:
@@ -453,6 +454,33 @@ def extract_bigrams(text_series, n_bigrams=30):
     return bigram_freq.most_common(n_bigrams)
 
 @st.cache_data
+def extract_trigrams(text_series, n_trigrams=30):
+    """
+    Extract trigrams from a series of text comments.
+    """
+    all_text = " ".join(text_series.tolist())
+    stop_words = set(stopwords.words('english'))
+    # Reuse or expand your custom stopwords here:
+    custom_stops = {
+        'would', 'could', 'get', 'also', 'even', 'like', 'bidirectional', 
+        'vehicles', 'charger', 'bidirectional', 'one', 'make', 'just', 
+        'ev', 'use', 'using', 'used', 'car', 'thing'
+    }
+    stop_words.update(custom_stops)
+    
+    # Tokenize and filter
+    words = word_tokenize(all_text.lower())
+    words = [
+        word for word in words 
+        if word.isalpha() and word not in stop_words and len(word) > 2
+    ]
+    
+    # Build trigrams and count
+    tri_grams = ngrams(words, 3)
+    trigram_freq = Counter([" ".join((w1, w2, w3)) for w1, w2, w3 in tri_grams])
+    return trigram_freq.most_common(n_trigrams)
+
+@st.cache_data
 def create_wordcloud(text_series):
     """Create a wordcloud from a series of text"""
     if text_series.empty:
@@ -894,8 +922,9 @@ def main():
             if len(keyword_comments) > 0:
                 keywords = extract_keywords(keyword_comments)
                 bigrams = extract_bigrams(keyword_comments)
+                trigrams = extract_trigrams(keyword_comments)
                 
-                word_tab, bigram_tab, cloud_tab = st.tabs(["Top Keywords", "Top Bigrams", "Word Cloud"])
+                word_tab, bigram_tab, cloud_tab = st.tabs(["Top Keywords", "Top Bigrams", "Top Trigrams", "Word Cloud"])
                 
                 with word_tab:
                     st.subheader("Top Keywords")
@@ -928,6 +957,24 @@ def main():
                     )
                     fig.update_layout(
                         yaxis={'categoryorder':'total ascending'},
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        xaxis=dict(gridcolor='rgba(0,0,0,0.1)')
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                    
+                with trigram_tab:
+                    st.subheader("Top Trigrams")
+                    trigram_df = pd.DataFrame(trigrams, columns=['Trigram', 'Count'])
+                    fig = px.bar(
+                        trigram_df.head(15),
+                        x='Count',
+                        y='Trigram',
+                        orientation='h',
+                        color='Count',
+                        color_continuous_scale='Plasma'
+                    )
+                    fig.update_layout(
+                        yaxis={'categoryorder': 'total ascending'},
                         plot_bgcolor='rgba(0,0,0,0)',
                         xaxis=dict(gridcolor='rgba(0,0,0,0.1)')
                     )
