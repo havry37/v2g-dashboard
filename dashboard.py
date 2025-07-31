@@ -494,7 +494,7 @@ def create_wordcloud(text_series):
     
     all_text = " ".join(text_series.tolist())
     stop_words = set(stopwords.words('english'))
-    custom_stops = {'would', 'could', 'get', 'need', 'much', 'going', 'also', 'much', 'think', 'sure', 'even', 'like', 'one', 'every', 'somethings', 'bidirectional', 'said', 'see', 'going', 'evse', 'way', 'already', 'really', 'make', 'just', 'use', 'battery', 'vehicle', 'car', 'charging', 'charge', 'ev'}
+    custom_stops = {'would', 'could', 'get', 'need', 'much', 'going', 'also', 'much', 'think', 'sure', 'even', 'like', 'one', 'every', 'somethings', 'bidirectional', 'said', 'see', 'going', 'evse', 'way', 'already', 'really', 'make', 'just', 'use', 'battery', 'vehicle', 'car', 'power', 'charging', 'charge', 'ev'}
     stop_words.update(custom_stops)
     
     wordcloud = WordCloud(
