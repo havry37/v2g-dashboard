@@ -1125,6 +1125,21 @@ def main():
             <span style="font-weight: 500;">Found {len(filtered_comments)} matching comments</span>
         </div>
         """, unsafe_allow_html=True)
+
+        if len(filtered_comments) > 0:
+            # Prepare download data
+            download_df = filtered_comments[['Comment', 'Topic_Label', 'Sentiment']].copy()
+            
+            # Convert to CSV
+            csv = download_df.to_csv(index=False).encode('utf-8')
+            
+            st.download_button(
+                label="📥 Download filtered comments as CSV",
+                data=csv,
+                file_name=f"filtered_comments_{selected_topic}_{selected_sentiment}.csv",
+                mime="text/csv",
+                key="download_comments"
+            )
         
         if len(filtered_comments) == 0:
             # nothing matched the filters
